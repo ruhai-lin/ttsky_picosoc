@@ -1,14 +1,15 @@
 `default_nettype none
-`timescale 1ns / 1ps
+`define SIMULATION
+//`timescale 1ns / 1ps
 
 /* This testbench just instantiates the module and makes some convenient wires
    that can be driven / tested by the cocotb test.py.
 */
 module tb ();
 
-  // Dump the signals to a FST file. You can view it with gtkwave or surfer.
+  // Dump the signals to a VCD file. You can view it with gtkwave or surfer.
   initial begin
-    $dumpfile("tb.fst");
+    $dumpfile("tb.vcd");
     $dumpvars(0, tb);
     #1;
   end
@@ -28,7 +29,7 @@ module tb ();
 `endif
 
   // Replace tt_um_example with your module name:
-  tt_um_example user_project (
+  tt_um_openram_top user_project (
 
       // Include power ports for the Gate Level test:
 `ifdef GL_TEST

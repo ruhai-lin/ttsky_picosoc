@@ -9,12 +9,22 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Explain how your project works
+A simple design with a 16x32 OpenRAM generated 1rw macro using two phased clocking to avoid potential hold violations.
+
+Supports clocks up to 250Mhz
 
 ## How to test
 
-Explain how to use your project
+assign web = ui_in[6]; //
+assign csb = ui_in[5]; // chip select
+assign sclkb = ui_in[4]; // phased clock b
+assign sclka = ui_in[3]; // phased clock a
+assign scan_mode = ui_in[2]; //1 scan reg chain, 0 scan phase chain
+assign scan_enable = ui_in[1]; //scan chain enable
+assign scan_in = ui_in[0]; //input value
+
+uio_in[3:0] are for byte write masking
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+No external hardware!
