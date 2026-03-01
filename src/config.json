@@ -34,8 +34,8 @@
   "CLOCK_NET": ["ui_in[3]", "ui_in[4]"],
   "FALLBACK_SDC_FILE": "src/project.sdc",
   "DESIGN_NAME" : "tt_um_openram_top",
-  "EXTRA_GDS" : ["src/sky130_sram_1rw_tiny.gds"],
-  "VERILOG_FILES_BLACKBOX" : ["src/sky130_sram_1rw_tiny.v"],
+  "EXTRA_GDS" : ["src/macros/sky130_sram_1rw_tiny.gds"],
+  "VERILOG_FILES_BLACKBOX" : ["src/macros/sky130_sram_1rw_tiny.v"],
   
   "MAGIC_CAPTURE_ERRORS" : true,
   "MAGIC_DRC_USE_GDS" : true,
@@ -53,13 +53,13 @@
                 }
             },
             "gds": [
-                "src/sky130_sram_1rw_tiny.gds"
+                "src/macros/sky130_sram_1rw_tiny.gds"
             ],
             "lef": [
-                "src/sky130_sram_1rw_tiny.lef"
+                "src/macros/sky130_sram_1rw_tiny.lef"
             ],
             "nl": [
-                "src/sky130_sram_1rw_tiny.v"
+                "src/macros/sky130_sram_1rw_tiny.v"
             ],
             "lib": {},
             "spice": [],

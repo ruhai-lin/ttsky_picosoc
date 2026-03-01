@@ -5,7 +5,7 @@
 
 `default_nettype none
 //`timescale 1ns / 1ps
-`include "sky130_sram_1rw_tiny.v"
+`include "macros/sky130_sram_1rw_tiny.v"
 `include "scan_chain_2ph.v"
 `include "defs.v"
 module tt_um_openram_top (
