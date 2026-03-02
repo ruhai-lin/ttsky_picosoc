@@ -28,7 +28,7 @@ module tb ();
   wire VGND = 1'b0;
 `endif
 
-  // Replace tt_um_example with your module name:
+  // SRAM-backed 8-bit counter top
   tt_um_openram_top user_project (
 
       // Include power ports for the Gate Level test:
