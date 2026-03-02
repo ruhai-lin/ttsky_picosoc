@@ -1,44 +1,71 @@
-# SPDX-FileCopyrightText: © 2024 Tiny Tapeout
-# SPDX-License-Identifier: Apache-2.0
-
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import ClockCycles
+from cocotb.triggers import ClockCycles, FallingEdge
 
-@cocotb.test()
-async def test_sram_counter(dut):
-    """Test 8-bit counter with SRAM: write counter values, then read back."""
+CLK_PERIOD_NS = 20          # 50 MHz
+RESET_CYCLES  = 100
+UART_CLKDIV   = 104         # firmware sets reg_uart_clkdiv = 104
+UART_BIT_CLKS = UART_CLKDIV + 2   # 106 clock cycles per UART bit
 
-    dut._log.info("Start")
 
-    # Single clock, 50 MHz (20 ns period)
-    clock = Clock(dut.clk, 20, units="ns")
+async def uart_receive_byte(dut, bit_clks):
+    """Wait for and decode one UART byte from ser_tx_out."""
+    await FallingEdge(dut.ser_tx_out)
+    await ClockCycles(dut.clk, bit_clks // 2)
+
+    byte_val = 0
+    for i in range(8):
+        await ClockCycles(dut.clk, bit_clks)
+        bit = int(dut.ser_tx_out.value)
+        byte_val |= (bit << i)
+
+    await ClockCycles(dut.clk, bit_clks)
+    return byte_val
+
+
+async def uart_collector(dut, char_list):
+    """Background coroutine: continuously collects UART bytes."""
+    line_buffer = ""
+    while True:
+        b = await uart_receive_byte(dut, UART_BIT_CLKS)
+        char_list.append(b)
+
+        if b == 10:
+            # dut._log.info("UART: %s", line_buffer)
+            line_buffer = ""
+        elif b == 13:
+            pass
+        else:
+            ch = chr(b) if 32 <= b < 127 else "<0x{:02x}>".format(b)
+            line_buffer += ch
+
+
+@cocotb.test(timeout_time=500, timeout_unit="ms")
+async def test_picosoc_firmware(dut):
+    """Boot PicoSoC firmware from SPI flash, verify banner after auto-Enter."""
+
+    dut._log.info("Starting PicoSoC firmware test")
+
+    clock = Clock(dut.clk, CLK_PERIOD_NS, units="ns")
     cocotb.start_soon(clock.start())
 
-    # Reset
-    dut.ena.value = 1
-    dut.ui_in.value = 0
+    dut.ena.value    = 1
     dut.uio_in.value = 0
+
     dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 4)
+    await ClockCycles(dut.clk, RESET_CYCLES)
     dut.rst_n.value = 1
-    await ClockCycles(dut.clk, 2)
+    dut._log.info("Reset released, running firmware (auto-Enter at 250k cycles)...")
 
-    # Phase 1: write mode (ui_in[0]=1). Run 16 cycles so we write 0..15 to addresses 0..15
-    dut.ui_in.value = 1  # write_enable = 1
-    await ClockCycles(dut.clk, 16)
+    uart_chars = []
+    cocotb.start_soon(uart_collector(dut, uart_chars))
 
-    # Phase 2: read mode (ui_in[0]=0). Counter continues; addr = counter[3:0], we read back stored value
-    dut.ui_in.value = 0  # write_enable = 0
-    await ClockCycles(dut.clk, 1)  # one cycle for read to settle if model has latency
+    # tb.v auto-sends '\r' at 250k cycles post-reset.
+    # Wait 750k cycles total: 250k boot + send + 500k for banner/menu.
+    await ClockCycles(dut.clk, 750_000)
 
-    for i in range(16):
-        await ClockCycles(dut.clk, 1)
-        # SRAM has 1-cycle read latency: uo_out is the value at addr from previous cycle.
-        # After the initial wait, first uo_out is from addr 0 (value 0). Then we see 1,2,...,15,0.
-        read_val = dut.uo_out.value.integer
-        expected = (i + 2)
-        dut._log.info("read cycle %d: uo_out=%d expected=%d", i, read_val, expected)
-        assert read_val == expected, "uo_out=%d expected=%d" % (read_val, expected)
+    output = bytes(uart_chars).decode("ascii", errors="replace")
+    dut._log.info("Collected UART output (%d chars):\n%s", len(uart_chars), output)
 
-    dut._log.info("All 16 read-back values matched.")
+    assert "Booting" in output, "Expected boot banner in UART output"
+    dut._log.info("PASS - firmware booted and printed expected messages")

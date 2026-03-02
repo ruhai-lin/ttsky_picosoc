@@ -11,3 +11,7 @@ test/sim_build
 test/__pycache__/
 test/results.xml
 test/gate_level_netlist.v
+
+test/firmware/riscv32-unknown-elf.gcc-12.1.0
+test/firmware/firmware.elf
+test/firmware/firmware_sections.lds
