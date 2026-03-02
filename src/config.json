@@ -13,12 +13,11 @@
 
   "//": "PL_TARGET_DENSITY_PCT - You can increase this if Global Placement fails with error GPL-0302.",
   "//": "Users have reported that values up to 80 worked well for them.",
-  "FP_CORE_UTIL": 70,
-  "PL_TARGET_DENSITY_PCT": 50,
+  "PL_TARGET_DENSITY_PCT": 60,
 
   "//": "CLOCK_PERIOD - Increase this in case you are getting setup time violations.",
   "//": "The value is in nanoseconds, so 20ns == 50MHz.",
-  "CLOCK_PERIOD": 4,
+  "CLOCK_PERIOD": 20,
 
   "//": "Hold slack margin - Increase them in case you are getting hold violations.",
   "PL_RESIZER_HOLD_SLACK_MARGIN": 0.1,
@@ -30,9 +29,7 @@
 
   "//": "If you need a custom clock configuration, read the following documentation first:",
   "//": "https://tinytapeout.com/faq/#how-can-i-map-an-additional-external-clock-to-one-of-the-gpios",
-  "CLOCK_PORT": ["ui_in[3]", "ui_in[4]"],
-  "CLOCK_NET": ["ui_in[3]", "ui_in[4]"],
-  "FALLBACK_SDC_FILE": "src/project.sdc",
+  "CLOCK_PORT": "clk",
   "DESIGN_NAME" : "tt_um_openram_top",
   "EXTRA_GDS" : ["src/macros/sky130_sram_1rw_tiny.gds"],
   "VERILOG_FILES_BLACKBOX" : ["src/macros/sky130_sram_1rw_tiny.v"],
