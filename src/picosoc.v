@@ -77,8 +77,8 @@ module picosoc (
 	parameter [0:0] ENABLE_COUNTERS = 1;
 	parameter [0:0] ENABLE_IRQ_QREGS = 0;
 
-	// 64B on-chip SRAM: 16 words * 4 bytes/word
-	parameter integer MEM_WORDS = 16;
+	// 1KB on-chip SRAM: 256 words * 4 bytes/word
+	parameter integer MEM_WORDS = 256;
 	parameter [31:0] STACKADDR = (4*MEM_WORDS);       // end of memory
 	parameter [31:0] PROGADDR_RESET = 32'h 0010_0000; // 1 MB into flash
 	parameter [31:0] PROGADDR_IRQ = 32'h 0000_0000;
@@ -259,9 +259,9 @@ module picosoc_mem #(
 `endif
 
 `ifdef __pnr__
-	sky130_sram_1rw_tiny sram (
+	sky130_sram_1kbytes_1rw_32x256_8 sram (
 `else
-	sky130_sram_1rw_tiny #(.VERBOSE(0)) sram (
+	sky130_sram_1kbytes_1rw_32x256_8 #(.VERBOSE(0)) sram (
 `endif
 
 `ifdef USE_POWER_PINS
@@ -272,7 +272,7 @@ module picosoc_mem #(
 		.csb0       (1'b0),
 		.web0       (~writing),
 		.wmask0     (wen),
-		.addr0      (addr[3:0]),
+		.addr0      ({1'b0, addr[7:0]}),
 		.din0       (wdata),
 		.dout0      (dout0)
 	);

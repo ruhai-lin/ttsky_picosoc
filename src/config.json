@@ -30,43 +30,40 @@
   "//": "If you need a custom clock configuration, read the following documentation first:",
   "//": "https://tinytapeout.com/faq/#how-can-i-map-an-additional-external-clock-to-one-of-the-gpios",
   "CLOCK_PORT": "clk",
-  "DESIGN_NAME" : "tt_um_openram_top",
-  "EXTRA_GDS" : ["src/macros/sky130_sram_1rw_tiny.gds"],
-  "VERILOG_FILES_BLACKBOX" : ["src/macros/sky130_sram_1rw_tiny.v"],
+  "DESIGN_NAME" : "tt_um_picosoc",
+  "EXTRA_GDS" : ["src/macros/sky130_sram_1kbytes_1rw_32x256_8/sky130_sram_1kbytes_1rw_32x256_8.gds"],
+  "VERILOG_FILES_BLACKBOX" : ["src/macros/sky130_sram_1kbytes_1rw_32x256_8/sky130_sram_1kbytes_1rw_32x256_8.v"],
   
   "MAGIC_CAPTURE_ERRORS" : true,
   "MAGIC_DRC_USE_GDS" : true,
 
 
     "MACROS": {
-        "sky130_sram_1rw_tiny": {
-            "instances": {
-                "SRAM": {
-                    "location": [
-                        2,
-                        10
-                    ],
-                    "orientation": "S"
-                }
-            },
-            "gds": [
-                "src/macros/sky130_sram_1rw_tiny.gds"
-            ],
-            "lef": [
-                "src/macros/sky130_sram_1rw_tiny.lef"
-            ],
-            "nl": [
-                "src/macros/sky130_sram_1rw_tiny.v"
-            ],
-            "lib": {},
-            "spice": [],
-            "sdf": {}
-            }
-        },
+      "sky130_sram_1kbytes_1rw_32x256_8": {
+        "gds": [
+          "src/macros/sky130_sram_1kbytes_1rw_32x256_8/sky130_sram_1kbytes_1rw_32x256_8.gds"
+        ],
+        "lef": [
+          "src/macros/sky130_sram_1kbytes_1rw_32x256_8/sky130_sram_1kbytes_1rw_32x256_8.lef"
+        ],
+        "nl": [
+          "src/macros/sky130_sram_1kbytes_1rw_32x256_8/sky130_sram_1kbytes_1rw_32x256_8.v"
+        ],
+        "lib": {},
+        "spice": [],
+        "sdf": {},
+        "instances": {
+          "picosoc_inst.memory.sram": {
+            "location": [10, 1],
+            "orientation": "N"
+          }
+        }
+      }
+    },
         
     "FP_PDN_CFG": "src/pdn_config.tcl",
     
-    "PDN_MACRO_CONNECTIONS": ["SRAM vccd1 vssd1 VPWR VGND"],
+    "PDN_MACRO_CONNECTIONS": ["picosoc_inst.memory.sram vccd1 vssd1 VPWR VGND"],
     "VERILOG_POWER_DEFINE": "USE_POWER_PINS",
     
     "VDD_NETS": "VPWR",

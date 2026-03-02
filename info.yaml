@@ -8,20 +8,20 @@ project:
   clock_hz:     50000000       # Clock frequency in Hz (or 0 if not applicable)
 
   # How many tiles your design occupies? A single tile is about 167x108 uM.
-  tiles: "8x2"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
+  tiles: "8x4"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
 
   # Your top module name must start with "tt_um_". Make it unique by including your github username:
   top_module:  "tt_um_picosoc"
 
   # List your project's source files here. picosoc.v must be before picorv32.v (macro order).
-  # Also include the 64B SRAM Verilog model used for simulation.
+  # Also include the 1KB SRAM Verilog model used for simulation.
   source_files:
     - "picosoc.v"
     - "picorv32.v"
     - "spimemio.v"
     - "simpleuart.v"
     - "tt_um_picosoc.v"
-    - "macros/sky130_sram_1rw_tiny.v"
+    - "macros/sky130_sram_1kbytes_1rw_32x256_8/sky130_sram_1kbytes_1rw_32x256_8.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 # This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).

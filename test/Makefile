@@ -27,8 +27,8 @@ ifneq ($(GATES),yes)
 # previously-generated sim_build owned by root.
 SIM_BUILD				= sim_build/rtl
 VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,$(PROJECT_SOURCES))
-# 64B SRAM behavioral model (for simulation only; synthesis uses blackbox)
-VERILOG_SOURCES += $(SRC_DIR)/macros/sky130_sram_1rw_tiny.v
+# 1KB SRAM behavioral model (for simulation only; synthesis uses blackbox)
+VERILOG_SOURCES += $(SRC_DIR)/macros/sky130_sram_1kbytes_1rw_32x256_8/sky130_sram_1kbytes_1rw_32x256_8.v
 
 else
 
