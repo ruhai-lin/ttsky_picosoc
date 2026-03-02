@@ -20,7 +20,6 @@ project:
     - "picorv32.v"
     - "spimemio.v"
     - "simpleuart.v"
-    - "spiflash.v"
     - "tt_um_picosoc.v"
     - "macros/sky130_sram_1rw_tiny.v"
 
